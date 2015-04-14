@@ -24,7 +24,7 @@ Download `da_toolbox.sh` from this repository, and start with:
 
 or 
 
-`chmod 755 da_toolbox`
+`chmod 755 da_toolbox.sh`
 
 `./da_toolbox.sh`
 
