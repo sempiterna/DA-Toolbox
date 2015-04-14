@@ -34,6 +34,8 @@ This script should be run as root or a user with root privileges. It also works 
 
 This script (for safety reasons) allows for termination with CTRL-C, however it is strongly advised to not terminate the script while it is in the process of installing or updating software. Only do so if you are monitoring the screen output, and you notice that something goes horribly wrong in the process.
 
+Software and PHP module versions can be modified by editing the variables below `Module version names`. It is strongly advised to execute a test installation of the changes using a test server before using it on a production server.
+
 ## Extending:
 
 I have tried to make it relatively easy to extend this script with more PHP modules and extensions, and I may add some more info either in this readme file or a separate file on how to extend the script.
