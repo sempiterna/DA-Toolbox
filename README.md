@@ -28,7 +28,7 @@ or
 
 `./da_toolbox.sh`
 
-By default, this script will store configuration file backups to `/usr/local/src/toolbox`. You can change this by editing the `SRCDIR` variable.
+By default, this script will store configuration file backups and software downloads to `/usr/local/src/toolbox`. You can change this by editing the `SRCDIR` variable.
 
 This script should be run as root or a user with root privileges. It also works with a menu structure using 2 columns. If it detects that the terminal is not wide enough, it will only show one column. If only one column is shown, some information may not be visible.
 
