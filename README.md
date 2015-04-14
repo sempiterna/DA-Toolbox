@@ -40,4 +40,4 @@ Software and PHP module versions can be modified by editing the variables below 
 
 I have tried to make it relatively easy to extend this script with more PHP modules and extensions, and I may add some more info either in this readme file or a separate file on how to extend the script.
 
-For questions, or remarks please e-mail me at jeroen@wierda.com :)
+For questions, suggestions, or remarks please e-mail me at jeroen@wierda.com :)
