@@ -549,7 +549,7 @@ redis() {
 				error_handler "Error during yum installation: script will exit now."
 				wget --no-check-certificate https://github.com/antirez/redis/archive/2.4.18.tar.gz
 				error_handler "Error during downloading of the redis server: script will exit now."
-				tar -zxvf 2.4.18
+				tar -zxvf 2.4.18.tar.gz
 				cd redis-2.4.18
 				make distclean && make 32bit && make install
 				COMMENTR="\nDue to this OS being 32bit, Redis version 2.4.18 is installed.\n"
