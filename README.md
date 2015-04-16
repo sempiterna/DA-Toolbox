@@ -1,5 +1,3 @@
-The actual script will be added to the repo soon.
-
 DA-Toolbox
 =============
 
