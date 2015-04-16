@@ -12,7 +12,7 @@ This script (for the most part) requires DirectAdmin, Custombuild 1 or 2, CentOS
 
 I used to work at a company which is hosting thousands of virtual private servers (VPS) and dedicated servers. Every day clients were asking us (support) to install PHP modules or other software, which was a lot of repetitive and time consuming work. I decided that most of this work could be scripted and automated, which lead to me creating this script early 2014. It has been in active use ever since on hundreds of production servers, saving the support department valuable time.
 
-This company I worked for was only rolling out DirectAdmin servers using CentOS 5 and 6 with Custombuild 1, so initially only support for Custombuild 1 was built in. Last month (03/2015) I also added support for Custombuild 2 (including support for 2 simultaneous PHP versions) and CentOS 7. These additions have been extensively tested on my test servers, and should work without fault.
+This company I worked for was mostly rolling out DirectAdmin servers using CentOS 5 and 6 with Custombuild 1, so initially only support for Custombuild 1 was built in. Last month (03/2015) I also added support for Custombuild 2 (including support for 2 simultaneous PHP versions) and CentOS 7. These additions have been extensively tested on my test servers, and should work without fault.
 
 An extensive rollback feature was also added. The script will copy all major configuration files, and restores them if something goes wrong during an installation. It will also log the installation action, so a rollback to the last state (also recursively) can be done using the script menu, or with the rollback.sh script that da-toolbox creates whenever it makes a configuration files backup.
 
