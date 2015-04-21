@@ -496,6 +496,7 @@ function ask_rpm_remove {
 		if [ "$RESP" = "y" ] || [ "$RESP" = "Y" ]; then
 			rm -Rf $DA_CUSTOMBUILD/mysql/*.rpm
 		fi
+		RPM_REMOVED=1
 	fi
 }
 
@@ -2290,15 +2291,21 @@ mysql_upgrade() {
 		MYSQL_VER_MAJOR=${MYSQL_VER:0:3}
 	fi
 	
-	if [ $MYSQL_UP \< $MYSQL_VER_MAJOR ]; then
+	if [ $MYSQL_UP \< $MYSQL_VER_MAJOR ] && [ "$MARIADB" != "1" ]; then
 		COMMENTR="You have version $MYSQL_VER_MAJOR, and want to go to $MYSQL_UP. This is a lower version, and not possible."
 		echo $COMMENTR;
+	elif [ $MARIADB_UP \< $MYSQL_VER_MAJOR ] && [ "$MARIADB" == "1" ]; then
+		COMMENTR="You have version $MYSQL_VER_MAJOR, and want to go to $MARIADB_UP. This is a lower version, and not possible."
+		echo $COMMENTR;
 	else
-		if [ "$MARIADB" == "1" ]; then
-			## placeholder for future MariaDB updates
+		
+		if [ "$MYSQL_VER_MAJOR" = "$MARIADB_UP" ] && [ "$MARIADB" == "1" ]; then
+			COMMENTR="You are already running MySQL (MariaDB) $MARIADB_UP."
+			echo -e $COMMENTR
+		elif [ "$MARIADB" == "1" ]; then
 			mysql_upgrade_steps
 		elif [[ ( "$MYSQL_VER_MAJOR" == "5.0" ) && ( "$MYSQL_UP" == "5.5" || "$MYSQL_UP" == "5.6" ) ]]; then
-			## upgrade to 5.1 first
+			## upgrade MySQL to 5.1 first
 			STEP=1
 			mysql_upgrade_steps
 			STEP=2
@@ -2311,7 +2318,7 @@ mysql_upgrade() {
 			STEP=2
 			mysql_upgrade_steps
 		elif [ "$MYSQL_VER_MAJOR" == "5.1" ] && [ "$MYSQL_UP" == "5.6" ]; then
-			## upgrade to 5.5 first
+			## upgrade MySQL to 5.5 first
 			STEP=2
 			mysql_upgrade_steps
 			STEP=3
@@ -2320,7 +2327,7 @@ mysql_upgrade() {
 			COMMENTR="You are already running MySQL $MYSQL_UP."
 			echo -e $COMMENTR
 		else
-			## assume version is 5.5 or above
+			## assume MySQL version is 5.5 or above
 			STEP=3
 			mysql_upgrade_steps		
 		fi
@@ -2337,6 +2344,10 @@ mysql_upgrade_steps() {
 	fi
 	MYSQL_TYPE=`cat /usr/local/directadmin/custombuild/options.conf |grep mysql_inst= |cut -d '=' -f2`
 
+	if [ "$RPM_REMOVED" != "1" ]; then
+		ask_rpm_remove
+	fi
+	
 	cd $DA_CUSTOMBUILD
 	if [ ${CUSTOMBUILD_VER:0:1} == 2 ] && ([ $MYSQL_TYPE == "yes" ] || [ $MYSQL_TYPE == "no" ]); then
 		# Custombuild was changed somewhere in 04/2015 where value 'yes' is no longer valid. Build update to get the newest custombuild.
@@ -2392,7 +2403,6 @@ mysql_upgrade_steps() {
 		
 		error_handler "Error during build update! Check the options.conf for errors."
 		
-		ask_rpm_remove
 		./build mysql
 		
 		MYSQL_VER_NEW=`mysql --user=root -V |cut -d" " -f6 |tr -d , |sed s/\-MariaDB.*//I`
@@ -2418,7 +2428,6 @@ mysql_upgrade_steps() {
 		
 		error_handler "Error during build update! Check the options.conf for errors."
 
-		ask_rpm_remove
 		./build mysql
 		
 		if [[ ( $STEP -eq 2 && "$MYSQL_UP" == "5.5" ) || ( $STEP -eq 3 && "$MYSQL_UP" == "5.6" ) ]]; then
@@ -2439,7 +2448,7 @@ mysql_upgrade_steps() {
 
 show_menus() {
 	## Empty previously used variables
-	unset ALT_INI IMAGICK_I PDFLIB_I MAILPARSE_I MEMCACHE_I MEMCACHE_Id APC_I RUID_I XSL_I NOTNEEDED PHP_53 PHP_54 PHP_55 PHP_56 SPECIFICS REDIS_I GIT_I PHPREDIS_I MY_PHP ZENDOPCACHE_I EXTENSIONTYPE PY_I IONCUBE GUARD OPTIMIZER EXT_NAME EXT_NAMEb IMAP_I SSH_I LDAP_I TIDY_I INTL_I PSSRV_I PS_I MYSQL_UP MARIADB_UP PHP_EXT_VAL CONFIGUREFLAG GOODTOGO PHP_EXT PHP_VER_MAJOR PHP_CURRENT PHP_UPGRADE ALT_INI_FILE
+	unset ALT_INI IMAGICK_I PDFLIB_I MAILPARSE_I MEMCACHE_I MEMCACHE_Id APC_I RUID_I XSL_I NOTNEEDED PHP_53 PHP_54 PHP_55 PHP_56 SPECIFICS REDIS_I GIT_I PHPREDIS_I MY_PHP ZENDOPCACHE_I EXTENSIONTYPE PY_I IONCUBE GUARD OPTIMIZER EXT_NAME EXT_NAMEb IMAP_I SSH_I LDAP_I TIDY_I INTL_I PSSRV_I PS_I MYSQL_UP MARIADB_UP PHP_EXT_VAL CONFIGUREFLAG GOODTOGO PHP_EXT PHP_VER_MAJOR PHP_CURRENT PHP_UPGRADE ALT_INI_FILE RPM_REMOVED
 	PECL_NAME=""
 	PECL_EXT=""
 	PECL_FILENAME=""
