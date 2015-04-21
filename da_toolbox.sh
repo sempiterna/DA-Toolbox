@@ -265,6 +265,11 @@ cd $SRCDIR
 
 function rollback {
 	cp -p $SRCDIR/$NOW_DATE_INIT/configs/php.ini.cli /usr/local/lib/php.ini
+	if [ -f $SRCDIR/$NOW_DATE_INIT/configs/build ]; then
+		cp -p $SRCDIR/$NOW_DATE_INIT/configs/build $DA_CUSTOMBUILD/build
+		rm -f $DA_CUSTOMBUILD/build.ori
+		rm -f $DA_CUSTOMBUILD/build.php56
+	fi
 	if [ -n "$PHP5CGI" ]; then
 		cp -p $SRCDIR/$NOW_DATE_INIT/configs/php.ini.cgi /usr/local/etc/php5/cgi/php.ini
 	fi
@@ -1511,7 +1516,7 @@ php_upgrade() {
 	PHP_VER_MAJOR=${PHP_VER:0:3}
 	PHP_CURRENT=$PHP_VER_MAJOR
 	PHP_MAIN_INI=/usr/local/lib/php.ini
-	ALT_INI_FILE=""
+	ALT_INI_FILE="thisfiledoesnotexist01"
 	
 	if [ ${CUSTOMBUILD_VER:0:1} == 2 ]; then
 		CB2_1PHP=`cat $DA_CUSTOMBUILD/options.conf |grep php1_release |cut -d '=' -f2`
@@ -1551,7 +1556,6 @@ php_upgrade() {
 			ALT_INI_FILE=/usr/local/lib/php.conf.d/10-directadmin.ini
 		fi
 	fi
-	#exit 0
 
 	## Check if upgrade is necessary
 	if [ $PHP_VER_MAJOR == $PHP_UPGRADE ]; then
